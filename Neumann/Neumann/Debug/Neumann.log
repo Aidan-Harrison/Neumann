@@ -1,3 +1,2 @@
 ﻿  Application.cpp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Neumann.vcxproj -> C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Debug\Neumann.exe
