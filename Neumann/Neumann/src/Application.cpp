@@ -6,6 +6,10 @@
 // OpenGL includes
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+// GLM
+#include <GLM/glm.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtc/type_ptr.hpp>
 
 // Prototypes
 void FrameBufferSize(GLFWwindow *window, short width, short height);
