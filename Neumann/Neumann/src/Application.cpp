@@ -10,6 +10,10 @@
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 #include <GLM/gtc/type_ptr.hpp>
+// Custom
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 // Prototypes
 void FrameBufferSize(GLFWwindow *window, short width, short height);
@@ -42,7 +46,7 @@ static ShaderSource ParseShader(const std::string &filePath) {
                 type = ShaderType::FRAGMENT;
         }
         else {
-            ss[(int)type] << line << '\n'; // Add shader to string stream
+            ss[static_cast<int>(type)] << line << '\n'; // Add shader to string stream
         }
     }
     return {ss[0].str(), ss[1].str()};
@@ -87,31 +91,27 @@ int main(void) {
         1, 2, 3
     };
 
-    // Vertex buffer & array
-    unsigned int VBO, VAO, IBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &IBO);
-    glBindVertexArray(VAO);
+    // Vertex buffer, Index buffer & V array object
+    unsigned int VAO;
+    GLCall(glGenVertexArrays(1, &VAO));
+    GLCall(glBindVertexArray(VAO));
 
-    // Vertex Buffer Data
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    VertexBuffer vb(vertices, sizeof(vertices));
+    IndexBuffer ib(indicies, sizeof(indicies));
 
-    // Index buffer data
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO); 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
+    vb.Bind();
+    ib.Bind();
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
+    GLCall(glEnableVertexAttribArray(0));
 
     // Shader comp
     ShaderSource source = ParseShader("res/Shaders/Main.shader");
     unsigned int shader = CreateShader(source.vertexSource, source.fragmentSource);
-    glUseProgram(shader);
+    GLCall(glUseProgram(shader));
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind vertex buffer
-    glBindVertexArray(0); // Unbind vertex array object
+    vb.Unbind();
+    GLCall(glBindVertexArray(0)); // Unbind vertex array object
 
     ///* Loop until the user closes the window */
     while(!glfwWindowShouldClose(window)) {
@@ -123,9 +123,9 @@ int main(void) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Draw triangle
-        glUseProgram(shader);
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        GLCall(glUseProgram(shader));
+        GLCall(glBindVertexArray(VAO));
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -135,10 +135,8 @@ int main(void) {
     }
 
     /// Deallocate resources
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &IBO);
-    glDeleteProgram(shader);
+    GLCall(glDeleteVertexArrays(1, &VAO));
+    GLCall(glDeleteProgram(shader));
 
     glfwTerminate();
     return 0;
