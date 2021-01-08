@@ -1,3 +1,14 @@
 ﻿  Application.cpp
-C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(173,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(150,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(204,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(205,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(209,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(210,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(211,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(212,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  IndexBuffer.cpp
+  Renderer.cpp
+  VertexArray.cpp
+  VertexBuffer.cpp
+  Generating Code...
   Neumann.vcxproj -> C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Debug\Neumann.exe
