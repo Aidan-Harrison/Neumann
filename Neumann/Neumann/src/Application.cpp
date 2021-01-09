@@ -12,28 +12,24 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "ShaderHandler.h"
+#include "Camera.h"
+// #include "Input.h" // Come back to this
 
 // Prototypes
 void FrameBufferSize(GLFWwindow *window, short width, short height);
-void ProcessInput(GLFWwindow *window);
-void mouseCall(GLFWwindow *window, double xPos, double yPos);
-void scrollCall(GLFWwindow *window, double xOffset, double yOffset);
+void MouseCall(GLFWwindow* window, double xPos, double yPos); // Capitalize
+void ScrollCall(GLFWwindow* window, double xOffset, double yOffset);
+void ProccessInput(GLFWwindow* window);
 
-// Global Settings
-bool firstMouse = true;
-const short screenWidth = 800;
-const short screenHeight = 600;
-    // Timing
+// Global Settings | Abstract later
+bool firstMouse = false;
+double lastX, lastY;
 float deltaTime = 0.0f; // Delta of current and last frame
 float lastFrame = 0.0f; // Time of last frame
+const short screenWidth = 800;
+const short screenHeight = 600;
 
-/// Create Camera -------------------------------------------------------------------------------------------------------------------------------
-float mouseX = screenWidth / 2, mouseY = screenHeight / 2;
-float lastX = screenWidth / 2, lastY = screenHeight / 2;
-float yaw = -90.0f, pitch = 0.0f, fov = 45.0f;
-glm::vec3 camPos    = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 camUp     = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 camFront  = glm::vec3(0.0f, 0.0f, -1.0f);
+Camera cam;
 
 /// Main =============================================================================================================================================
 int main(void) {
@@ -47,14 +43,14 @@ int main(void) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(screenWidth, screenHeight, "Neumann | Graphics Engine", NULL, NULL);
+    window = glfwCreateWindow(screenWidth, screenHeight, "Neumann | Graphics Engine", NULL, NULL); // CHANGE AFTER RENDERER CLASS MADE
     if(!window) {
         std::cerr << "Failed to create window\n"; glfwTerminate();
         return -1;
     }
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Hides cursor
-    glfwSetCursorPosCallback(window, mouseCall); // Check position!
-    glfwSetScrollCallback(window, scrollCall);
+    glfwSetCursorPosCallback(window, MouseCall);
+    glfwSetScrollCallback(window, ScrollCall);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -138,7 +134,7 @@ int main(void) {
     ///* Loop until the user closes the window */ ==========================================================================================================
     while(!glfwWindowShouldClose(window)) {
         /* Input */
-        ProcessInput(window);
+        ProccessInput(window);
 
         /* Render here */
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -151,25 +147,28 @@ int main(void) {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        /// Create transformations -----------------------------------------------------------------------------------------------------------------------
+        /// Transformations -----------------------------------------------------------------------------------------------------------------------
         glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f) = glm::lookAt(camPos, camPos + camFront, camUp);
-        glm::mat4 projection = glm::perspective(glm::radians(fov), static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.1f, 100.0f);
-
         model = glm::rotate(model, static_cast<float>(glfwGetTime()) * glm::radians(-55.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        cam.Transformation(cam.m_View, cam.m_Projection);
+        cam.Translate(cam.m_View);
 
             // Apply transformations
         unsigned int modelLoc = glGetUniformLocation(shader.m_ID, "model");
         unsigned int viewLoc  = glGetUniformLocation(shader.m_ID, "view");
         unsigned int projLoc  = glGetUniformLocation(shader.m_ID, "projection");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &cam.m_View[0][0]);
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam.m_Projection));
 
-        /// Set lighting ------------------------------------------------------------------------------------------------------------------------------
+        /// Lighting ------------------------------------------------------------------------------------------------------------------------------
         glGetUniformLocation(shader.m_ID, "objectColour");
         glGetUniformLocation(shader.m_ID, "lightColour");
         shader.SetVec3("objectColour", 1.0f, 0.5f, 0.31f);
+        shader.SetVec3("lightColour", 1.0f, 1.0f, 1.0f);
+
+        glm::vec3 lightPos = glm::vec3(-3.0f, 0.0f, 0.0f);
+        shader.SetVec3("lightPos", lightPos);
+        shader.SetVec3("viewPos", cam.m_CamPos);
 
         /// Draw cubes -----------------------------------------------------------------------------------------------------------------------------
         va.Bind();
@@ -179,7 +178,6 @@ int main(void) {
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
             GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
         }
-
             // GLCall(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0));
 
         /* Swap front and back buffers */
@@ -198,9 +196,13 @@ int main(void) {
     return 0;
 }
 
-/// Functions ========================================================================================================================================
-void mouseCall(GLFWwindow* window, double xPos, double yPos) {
-    if(firstMouse) {
+// Alter window size
+void FrameBufferSize(GLFWwindow *window, short width, short height) {
+    glViewport(0, 0, width, height);
+}
+
+void MouseCall(GLFWwindow* window, double xPos, double yPos) {
+    if (firstMouse) {
         lastX = xPos;
         lastY = yPos;
         firstMouse = false;
@@ -214,46 +216,41 @@ void mouseCall(GLFWwindow* window, double xPos, double yPos) {
     const float sensitivity = 0.05f;
     xOffset *= sensitivity;
     yOffset *= sensitivity;
-    yaw     += xOffset;
-    pitch   += yOffset;
+    cam.yaw += xOffset;
+    cam.pitch += yOffset;
 
     // Clamp
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
+    if (cam.pitch > 89.0f)
+        cam.pitch = 89.0f;
+    if (cam.pitch < -89.0f)
+        cam.pitch = -89.0f;
 
     glm::vec3 direction = glm::vec3(0.0f);
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    camFront = glm::normalize(direction);
+    direction.x = cos(glm::radians(cam.yaw)) * cos(glm::radians(cam.pitch));
+    direction.y = sin(glm::radians(cam.pitch));
+    direction.z = sin(glm::radians(cam.yaw)) * cos(glm::radians(cam.pitch));
+    cam.m_CamFront = glm::normalize(direction);
 }
 
-void scrollCall(GLFWwindow* window, double xOffset, double yOffset) {
-    fov -= static_cast<float>(yOffset);
-    if (fov < 1.0f)
-        fov = 1.0f;
-    if (fov > 75.0f)
-        fov = 75.0f;
+void ScrollCall(GLFWwindow* window, double xOffset, double yOffset) {
+    cam.FOV -= static_cast<float>(yOffset);
+    if (cam.FOV < 1.0f)
+        cam.FOV = 1.0f;
+    if (cam.FOV > 75.0f)
+        cam.FOV = 75.0f;
 }
 
-void ProcessInput(GLFWwindow *window) { // Add diagonal movement
+void ProccessInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
     const float camSpeed = 2.0f * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camPos += camSpeed * camFront;
+        cam.m_CamPos += camSpeed * cam.m_CamFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camPos -= camSpeed * camFront;
+        cam.m_CamPos -= camSpeed * cam.m_CamFront;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camPos -= glm::normalize(glm::cross(camFront, camUp)) * camSpeed;
+        cam.m_CamPos -= glm::normalize(glm::cross(cam.m_CamFront, cam.m_CamUp)) * camSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camPos += glm::normalize(glm::cross(camFront, camUp)) * camSpeed;
-}
-
-// Alter window size
-void FrameBufferSize(GLFWwindow *window, short width, short height) {
-    glViewport(0, 0, width, height);
+        cam.m_CamPos += glm::normalize(glm::cross(cam.m_CamFront, cam.m_CamUp)) * camSpeed;
 }

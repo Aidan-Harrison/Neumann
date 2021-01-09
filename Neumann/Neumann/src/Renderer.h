@@ -11,4 +11,6 @@
 void GLClearError();
 bool GLLogCall(const char* function, const char* file, int line);
 
+// Make renderer class!
+
 #endif
