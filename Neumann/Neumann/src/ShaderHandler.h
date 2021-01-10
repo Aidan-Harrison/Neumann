@@ -19,8 +19,14 @@ struct Shader {
 	void SetInt(const std::string &name, int value) const;
 	void SetFloat(const std::string &name, float value) const;
 		// Vectors
-	void SetVec3(const std::string &name, const glm::vec3 &value);
-	void SetVec3(const std::string &name, float x, float y, float z);
+	void SetVec2(const std::string &name, const glm::vec2 &value) const;
+	void SetVec2(const std::string &name, float x, float y) const;
+	void SetVec3(const std::string &name, const glm::vec3 &value) const;
+	void SetVec3(const std::string &name, float x, float y, float z) const;
+		// Matrices
+	void SetMat2(const std::string &name, const glm::mat2 &mat) const;
+	void SetMat3(const std::string &name, const glm::mat3 &mat) const;
+	void SetMat4(const std::string &name, const glm::mat4 &mat) const;
 };
 
 #endif

@@ -7,8 +7,6 @@
 #include "Renderer.h"
 
 struct Input {
-	void MouseCall(GLFWwindow *window, Camera &cam, double xPos, double yPos); // Capitalize
-	void ScrollCall(GLFWwindow *window, Camera &cam, double xOffset, double yOffset);
 	void ProccessInput(GLFWwindow *window, Camera &cam);
 };
 

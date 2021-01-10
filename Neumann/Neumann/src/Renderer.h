@@ -11,6 +11,13 @@
 void GLClearError();
 bool GLLogCall(const char* function, const char* file, int line);
 
+namespace GlobalRend { // Contains global variables
+	extern const short screenWidth, screenHeight; // Check const!
+	extern float deltaTime, lastFrame; // Delta of current and last frame
+	extern bool firstMouse;
+	extern double lastX, lastY;
+};
+
 // Make renderer class!
 
 #endif

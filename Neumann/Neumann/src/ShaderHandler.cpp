@@ -52,22 +52,13 @@ void Shader::Use() {
 	glUseProgram(m_ID);
 }
 
-void Shader::SetBool(const std::string &name, bool value) const {
-	glUniform1i(glGetUniformLocation(m_ID, name.c_str()), static_cast<int>(value));
-}
-
-void Shader::SetInt(const std::string &name, int value) const {
-	glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
-}
-
-void Shader::SetFloat(const std::string &name, float value) const {
-	glUniform1f(glGetUniformLocation(m_ID, name.c_str()), value);
-}
-
-void Shader::SetVec3(const std::string &name, const glm::vec3 &value) {
-	glUniform3fv(glGetUniformLocation(m_ID, name.c_str()), 1, &value[0]);
-}
-
-void Shader::SetVec3(const std::string& name, float x, float y, float z) {
-	glUniform3f(glGetUniformLocation(m_ID, name.c_str()), x, y, z);
-}
+void Shader::SetBool(const std::string &name, bool value) const					{ GLCall(glUniform1i(glGetUniformLocation(m_ID, name.c_str()), static_cast<int>(value))); }
+void Shader::SetInt(const std::string &name, int value) const					{ GLCall(glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value)); }
+void Shader::SetFloat(const std::string &name, float value) const				{ GLCall(glUniform1f(glGetUniformLocation(m_ID, name.c_str()), value)); }
+void Shader::SetVec2(const std::string& name, const glm::vec2& value) const     { GLCall(glUniform2fv(glGetUniformLocation(m_ID, name.c_str()), 1, &value[0])); }
+void Shader::SetVec2(const std::string& name, float x, float y) const			{ GLCall(glUniform2f(glGetUniformLocation(m_ID, name.c_str()), x, y)); }
+void Shader::SetVec3(const std::string &name, const glm::vec3 &value) const     { GLCall(glUniform3fv(glGetUniformLocation(m_ID, name.c_str()), 1, &value[0])); }
+void Shader::SetVec3(const std::string& name, float x, float y, float z) const  { GLCall(glUniform3f(glGetUniformLocation(m_ID, name.c_str()), x, y, z)); }
+void Shader::SetMat2(const std::string& name, const glm::mat2& mat) const		{ GLCall(glUniformMatrix2fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, &mat[0][0])); }
+void Shader::SetMat3(const std::string& name, const glm::mat3& mat) const		{ GLCall(glUniformMatrix3fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, &mat[0][0])); }
+void Shader::SetMat4(const std::string& name, const glm::mat4& mat) const		{ GLCall(glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, &mat[0][0])); }

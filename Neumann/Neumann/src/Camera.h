@@ -18,6 +18,7 @@ struct Camera {
 
 	void Transformation(glm::mat4 &view, glm::mat4 &projection);
 	void Translate(glm::mat4 &view);
+	void CalculateMovement(Camera &cam, float xOffset, float yOffset);
 };
 
 #endif
