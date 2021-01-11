@@ -19,6 +19,7 @@
 void FrameBufferSize(GLFWwindow *window, short width, short height);
 void ScrollCall(GLFWwindow* window, double xOffset, double yOffset);
 void MouseCall(GLFWwindow* window, double xPos, double yPos);
+void LightMatSetup(Shader &shader, glm::vec3 lightPos, Camera &cam);
 
 using namespace GlobalRend;
 Camera cam;
@@ -154,21 +155,7 @@ int main(void) {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &cam.m_View[0][0]);
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam.m_Projection));
 
-        /// Lighting & Material Properties ---------------------------------------------------------------------------------------------------------
-        shader.SetVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-        shader.SetVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-        shader.SetVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-        shader.SetVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-        shader.SetVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-        shader.SetVec3("material.specular", 0.5f, 0.5f, 0.5f);
-        shader.SetFloat("material.roughness", 32.0f);
-
-        shader.SetVec3("objectColour", 1.0f, 0.5f, 0.31f);
-        shader.SetVec3("lightColour", 1.0f, 1.0f, 1.0f);
-
-        shader.SetVec3("lightPos", lightPos);
-        shader.SetVec3("viewPos", cam.m_CamPos);
+        LightMatSetup(shader, lightPos, cam);
 
         /// Draw cubes -----------------------------------------------------------------------------------------------------------------------------
         va.Bind();

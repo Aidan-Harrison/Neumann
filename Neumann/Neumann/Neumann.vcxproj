@@ -149,6 +149,7 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\LightMat.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\ShaderHandler.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
