@@ -20,6 +20,7 @@ void FrameBufferSize(GLFWwindow *window, short width, short height);
 void ScrollCall(GLFWwindow* window, double xOffset, double yOffset);
 void MouseCall(GLFWwindow* window, double xPos, double yPos);
 void LightMatSetup(Shader &shader, glm::vec3 lightPos, Camera &cam);
+void SetPointLight(Shader& shader, glm::vec3 lightPos[]);
 
 using namespace GlobalRend;
 Camera cam;
@@ -155,6 +156,15 @@ int main(void) {
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &cam.m_View[0][0]);
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cam.m_Projection));
 
+        /// Lighting & Materials -------------------------------------------------------------------------------------------------------------------
+            // Point light positions
+        glm::vec3 pointLightPositions[] = {
+            glm::vec3(1.0f, 0.2f, 2.0f),
+            glm::vec3(-3.0f, -3.0f, -4.0f),
+            glm::vec3(4.0f, 2.0f, -6.0f),
+            glm::vec3(2.0f, 0.5f, -3.0f),
+        };
+        SetPointLight(shader, pointLightPositions);
         LightMatSetup(shader, lightPos, cam);
 
         /// Draw cubes -----------------------------------------------------------------------------------------------------------------------------

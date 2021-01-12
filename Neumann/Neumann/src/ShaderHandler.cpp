@@ -48,9 +48,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	GLCall(glDeleteShader(fragment));
 }
 
-void Shader::Use() {
-	glUseProgram(m_ID);
-}
+void Shader::Use() { glUseProgram(m_ID); }
 
 void Shader::SetBool(const std::string &name, bool value) const					{ GLCall(glUniform1i(glGetUniformLocation(m_ID, name.c_str()), static_cast<int>(value))); }
 void Shader::SetInt(const std::string &name, int value) const					{ GLCall(glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value)); }

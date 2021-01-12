@@ -6,7 +6,7 @@
 #include "Renderer.h"
 
 struct Camera {
-	glm::vec3 m_CamPos, m_CamUp, m_CamFront;
+	glm::vec3 m_CamPos = glm::vec3(1.0f), m_CamUp = glm::vec3(1.0f), m_CamFront = glm::vec3(1.0f);
 	glm::mat4 m_View, m_Projection;
 	float FOV = 45.0f;
 	Camera();

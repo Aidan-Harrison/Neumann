@@ -1,10 +1,10 @@
 ﻿  Application.cpp
-C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(140,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(198,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(199,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(141,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(208,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(209,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Camera.cpp
+  Input.cpp
   LightMat.cpp
+  Renderer.cpp
   Generating Code...
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Debug\vc120.pdb'; linking object as if no debug info
   Neumann.vcxproj -> C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Debug\Neumann.exe
