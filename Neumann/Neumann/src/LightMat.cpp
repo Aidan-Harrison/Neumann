@@ -9,7 +9,8 @@ void LightMatSetup(Shader &shader, glm::vec3 lightPos, Camera &cam) {
 	shader.SetVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
 	shader.SetVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-	shader.SetVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+	// shader.SetVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+	shader.SetInt("material.texDiffuse", 0); // Texture
 	shader.SetVec3("material.specular", 0.5f, 0.5f, 0.5f);
 	shader.SetFloat("material.roughness", 32.0f);
 

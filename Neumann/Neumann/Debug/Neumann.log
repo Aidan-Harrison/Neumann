@@ -1,10 +1,9 @@
 ﻿  Application.cpp
-C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(141,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(208,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(209,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(146,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(217,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Neumann\src\Application.cpp(218,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Camera.cpp
   Input.cpp
   LightMat.cpp
-  Renderer.cpp
   Generating Code...
   Neumann.vcxproj -> C:\Users\aid25\Documents\Programming\C++\Neumann\Neumann\Neumann\Debug\Neumann.exe
