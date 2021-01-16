@@ -6,15 +6,16 @@
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
 #include <GLM/gtc/type_ptr.hpp>
+// Assimp
 // Custom
 #include "Renderer.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
-#include "ShaderHandler.h"
-#include "Camera.h"
-#include "Input.h" // Come back to this
-#include "TextureHandler.h"
+#include "..\src\VIVa\VertexBuffer.h"
+#include "..\src\VIVa\IndexBuffer.h"
+#include "..\src\VIVa\VertexArray.h"
+#include "..\src\Shader\ShaderHandler.h"
+#include "..\src\Camera\Camera.h"
+#include "..\src\Input\Input.h"
+#include "..\src\Shader\TextureHandler.h"
 
 // Prototypes
 void FrameBufferSize(GLFWwindow *window, short width, short height);
@@ -54,68 +55,60 @@ int main(void) {
     if(glewInit() != GLEW_OK)
         std::cerr << "Error! GLEW not ok\n";
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
 
     /// Main Body ====================================================================================================================================
         // Vertices
     float vertices[] = {
-        // Positions             Normals               Texture Coordinates
-        -0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,   1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,   0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,     0.0f,  0.0f, 1.0f,    0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,     0.0f,  0.0f, 1.0f,    1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,     0.0f,  0.0f, 1.0f,    1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,     0.0f,  0.0f, 1.0f,    1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,     0.0f,  0.0f, 1.0f,    0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,     0.0f,  0.0f, 1.0f,    0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,     1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,     1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,     1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,     1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,     1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,     1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,   0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,   1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,   1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,   1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,   0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,   0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,   0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,   1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,   1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,   1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,   0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,   0.0f, 1.0f
+        // Positions             Normals                Texture Coordinates
+        -0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,    0.0f, 0.0f, // bottom-left
+         0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,    1.0f, 0.0f, // bottom-right
+         0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,    1.0f, 1.0f, // top-right   
+         0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,    1.0f, 1.0f, // top-right 
+        -0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,    0.0f, 1.0f, // top-left 
+        -0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,    0.0f, 0.0f, // bottom-left 
+        // front face                                  
+        -0.5f, -0.5f,  0.5f,     0.0f,  0.0f, 1.0f,     0.0f, 0.0f, // bottom-left
+         0.5f,  0.5f,  0.5f,     0.0f,  0.0f, 1.0f,     1.0f, 1.0f, // top-right  
+         0.5f, -0.5f,  0.5f,     0.0f,  0.0f, 1.0f,     1.0f, 0.0f, // bottom-right
+         0.5f,  0.5f,  0.5f,     0.0f,  0.0f, 1.0f,     1.0f, 1.0f, // top-right 
+        -0.5f, -0.5f,  0.5f,     0.0f,  0.0f, 1.0f,     0.0f, 0.0f, // bottom-left  
+        -0.5f,  0.5f,  0.5f,     0.0f,  0.0f, 1.0f,     0.0f, 1.0f, // top-left    
+        // left face                                  
+        -0.5f,  0.5f,  0.5f,    -1.0f,  0.0f, 0.0f,     1.0f, 0.0f, // top-right
+        -0.5f, -0.5f, -0.5f,    -1.0f,  0.0f, 0.0f,     0.0f, 1.0f, // bottom-left  
+        -0.5f,  0.5f, -0.5f,    -1.0f,  0.0f, 0.0f,     1.0f, 1.0f, // top-left    
+        -0.5f, -0.5f, -0.5f,    -1.0f,  0.0f, 0.0f,     0.0f, 1.0f, // bottom-left 
+        -0.5f,  0.5f,  0.5f,    -1.0f,  0.0f, 0.0f,     1.0f, 0.0f, // top-right  
+        -0.5f, -0.5f,  0.5f,    -1.0f,  0.0f, 0.0f,     0.0f, 0.0f, // bottom-right
+        // right face           
+         0.5f,  0.5f,  0.5f,     1.0f,  0.0f, 0.0f,     1.0f, 0.0f, // top-left
+         0.5f,  0.5f, -0.5f,     1.0f,  0.0f, 0.0f,     1.0f, 1.0f, // top-right   
+         0.5f, -0.5f, -0.5f,     1.0f,  0.0f, 0.0f,     0.0f, 1.0f, // bottom-right
+         0.5f, -0.5f, -0.5f,     1.0f,  0.0f, 0.0f,     0.0f, 1.0f, // bottom-right
+         0.5f, -0.5f,  0.5f,     1.0f,  0.0f, 0.0f,     0.0f, 0.0f, // bottom-left 
+         0.5f,  0.5f,  0.5f,     1.0f,  0.0f, 0.0f,     1.0f, 0.0f, // top-left 
+         // bottom face           
+        -0.5f, -0.5f, -0.5f,     0.0f, -1.0f, 0.0f,     0.0f, 1.0f, // top-right
+         0.5f, -0.5f,  0.5f,     0.0f, -1.0f, 0.0f,     1.0f, 0.0f, // bottom-left  
+         0.5f, -0.5f, -0.5f,     0.0f, -1.0f, 0.0f,     1.0f, 1.0f, // top-left    
+         0.5f, -0.5f,  0.5f,     0.0f, -1.0f, 0.0f,     1.0f, 0.0f, // bottom-left 
+        -0.5f, -0.5f, -0.5f,     0.0f, -1.0f, 0.0f,     0.0f, 1.0f, // top-right  
+        -0.5f, -0.5f,  0.5f,     0.0f, -1.0f, 0.0f,     0.0f, 0.0f, // bottom-right
+        // top face                                     
+        -0.5f,  0.5f, -0.5f,     0.0f,  1.0f, 0.0f,     0.0f, 1.0f, // top-left
+         0.5f,  0.5f, -0.5f,     0.0f,  1.0f, 0.0f,     1.0f, 1.0f, // top-right  
+         0.5f,  0.5f,  0.5f,     0.0f,  1.0f, 0.0f,     1.0f, 0.0f, // bottom-right 
+         0.5f,  0.5f,  0.5f,     0.0f,  1.0f, 0.0f,     1.0f, 0.0f, // bottom-right 
+        -0.5f,  0.5f,  0.5f,     0.0f,  1.0f, 0.0f,     0.0f, 0.0f, // bottom-left 
+        -0.5f,  0.5f, -0.5f,     0.0f,  1.0f, 0.0f,     0.0f, 1.0f  // top-left
     };
 
     glm::vec3 cubePos[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),
         glm::vec3(-1.0f, 1.0f, -2.0f)
     };
-
-        // Indicies
-    /*
-    unsigned int indicies[] = {
-        0, 1, 3, // First triangle
-        1, 2, 3
-        // IndexBuffer ib(indicies, sizeof(indicies));
-        // ib.Bind();
-    };
-    */
 
         // Vertex buffer, Index buffer & V-Array object
     VertexArray va; // Auto generates with constructor
@@ -196,7 +189,6 @@ int main(void) {
     /// Deallocate resources =========================================================================================================================
     va.~VertexArray();
     vb.~VertexBuffer();
-        // ib.~IndexBuffer();
 
     glfwTerminate();
     return 0;

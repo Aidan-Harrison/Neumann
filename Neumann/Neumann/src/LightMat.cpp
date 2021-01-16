@@ -1,5 +1,5 @@
-#include "ShaderHandler.h"
-#include "Camera.h"
+#include "..\src\Shader\ShaderHandler.h"
+#include "..\src\Camera\Camera.h"
 
 // CONVERT TO HEADER AND CPP FILE FOR EASY CALLING
 
